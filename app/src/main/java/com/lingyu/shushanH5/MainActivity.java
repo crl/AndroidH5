@@ -17,6 +17,7 @@ import java.util.Date;
 
 public class MainActivity extends Activity {
     public static String TAG="Test";
+    public String author="crl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +48,27 @@ public class MainActivity extends Activity {
                     }
                 });
 
-        checkNetwork();
+        if(checkNetwork()){
+            Log.d(TAG, "checkNetwork:false");
+        }
 
         //SharedUtil
     }
 
     private boolean checkNetwork() {
         ConnectivityManager connManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+
+
+        boolean available=false;
+        try {
+            NetworkInfo networkInfo  = connManager.getActiveNetworkInfo();
+            available = networkInfo.isAvailable();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         // 获取当前的网络连接是否可用
-        boolean available = networkInfo.isAvailable();
-        if (available==false) {
+
+        if (!available) {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("网络连接")
                     .setMessage("当前的网络连接不可用!!!")
